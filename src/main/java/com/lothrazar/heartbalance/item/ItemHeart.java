@@ -1,14 +1,13 @@
 package com.lothrazar.heartbalance.item;
 
 import java.util.List;
-import com.lothrazar.heartbalance.ConfigManager;
+import com.lothrazar.heartbalance.ConfigRegistryHearts;
 import com.lothrazar.heartbalance.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -21,7 +20,7 @@ public class ItemHeart extends Item {
   final int healAmt;
 
   public ItemHeart(Properties properties, int value) {
-    super(properties.tab(CreativeModeTab.TAB_COMBAT));
+    super(properties);
     healAmt = value;
   }
 
@@ -43,8 +42,8 @@ public class ItemHeart extends Item {
       player.getCooldowns().addCooldown(itemstack.getItem(), 20);
       itemstack.shrink(1);
       player.swing(handIn);
-      if (world.isClientSide && ConfigManager.DO_SOUND_USE.get()) {
-        player.playSound(ModRegistry.HEART_GET, 0.2F, 0.95F);
+      if (world.isClientSide && ConfigRegistryHearts.DO_SOUND_USE.get()) {
+        player.playSound(ModRegistry.HEART_SOUND.get(), 0.2F, 0.95F);
       }
       return InteractionResultHolder.success(itemstack);
     }

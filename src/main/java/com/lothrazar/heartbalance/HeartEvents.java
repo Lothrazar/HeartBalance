@@ -2,6 +2,7 @@ package com.lothrazar.heartbalance;
 
 import java.util.UUID;
 import com.lothrazar.heartbalance.item.ItemHeart;
+import com.lothrazar.library.util.SoundUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -35,7 +36,7 @@ public class HeartEvents {
       healthAttribute.removeModifier(oldHealthModifier);
     }
     //always apply to player if they do not have
-    int h = 2 * ConfigManager.INIT_HEARTS.get();
+    int h = 2 * ConfigRegistryHearts.INIT_HEARTS.get();
     AttributeModifier healthModifier = new AttributeModifier(ID, ModMain.MODID, h, AttributeModifier.Operation.ADDITION);
     healthAttribute.addPermanentModifier(healthModifier);
   }
@@ -68,13 +69,13 @@ public class HeartEvents {
           itemEntity.setItem(resultStack);
           healed = true;
         }
-        if (healed && ConfigManager.DO_SOUND_PICKUP.get()) {
-          ModRegistry.playSoundFromServer((ServerPlayer) player, ModRegistry.HEART_GET, 0.3F, 0.95F);
+        if (healed && ConfigRegistryHearts.DO_SOUND_PICKUP.get()) {
+          SoundUtil.playSoundFromServer((ServerPlayer) player, ModRegistry.HEART_SOUND.get(), 0.3F, 0.95F);
         }
         //all done. so EITHER player is fully healed
         // OR we ran out of items... so do we cancel?
         //dont cancel if healed = true, there might be more remaining
-        if (!ConfigManager.DO_PICKUP.get() ||
+        if (!ConfigRegistryHearts.DO_PICKUP.get() ||
             itemEntity.getItem().isEmpty()) {
           itemEntity.remove(Entity.RemovalReason.DISCARDED);
           //cancel to block the pickup
@@ -88,7 +89,7 @@ public class HeartEvents {
   public void onLivingDeathEvent(LivingDeathEvent event) {
     Level world = event.getEntity().level;
     if (world.isClientSide || event.getSource() == null
-        || world.random.nextDouble() >= ConfigManager.CHANCE.get()) {
+        || world.random.nextDouble() >= ConfigRegistryHearts.CHANCE.get()) {
       return;
     }
     //if config is at 10, and you roll in 10-100 you were cancelled,

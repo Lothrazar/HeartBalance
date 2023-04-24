@@ -15,10 +15,11 @@ public class ModMain {
   public static final Logger LOGGER = LogManager.getLogger();
 
   public ModMain() {
-    ConfigManager.setup();
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    new ConfigRegistryHearts();
     IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    bus.addListener(this::setup);
     ModRegistry.ITEMS.register(bus);
+    ModRegistry.SOUNDS.register(bus);
   }
 
   private void setup(final FMLCommonSetupEvent event) {
