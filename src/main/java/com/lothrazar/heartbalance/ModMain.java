@@ -2,7 +2,6 @@ package com.lothrazar.heartbalance;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -23,6 +22,6 @@ public class ModMain {
   }
 
   private void setup(final FMLCommonSetupEvent event) {
-    MinecraftForge.EVENT_BUS.register(new HeartEvents());
+    new HeartEvents();
   }
 }

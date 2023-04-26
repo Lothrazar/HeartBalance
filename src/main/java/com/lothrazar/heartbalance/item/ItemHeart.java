@@ -1,26 +1,21 @@
 package com.lothrazar.heartbalance.item;
 
-import java.util.List;
 import com.lothrazar.heartbalance.ConfigRegistryHearts;
 import com.lothrazar.heartbalance.ModRegistry;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
+import com.lothrazar.library.item.ItemFlib;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ItemHeart extends Item {
+public class ItemHeart extends ItemFlib {
 
+  private static final int COOLDOWN = 20;
   final int healAmt;
 
   public ItemHeart(Properties properties, int value) {
-    super(properties);
+    super(properties, new Settings().tooltip());
     healAmt = value;
   }
 
@@ -29,17 +24,12 @@ public class ItemHeart extends Item {
   }
 
   @Override
-  @OnlyIn(Dist.CLIENT)
-  public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-    tooltip.add(Component.translatable(getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GRAY));
-  }
-
-  @Override
   public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand handIn) {
     ItemStack itemstack = player.getItemInHand(handIn);
     if (player.isHurt() && !player.getCooldowns().isOnCooldown(itemstack.getItem())) {
       player.heal(getHealing());
-      player.getCooldowns().addCooldown(itemstack.getItem(), 20);
+      player.getCooldowns().addCooldown(itemstack.getItem(), COOLDOWN);
+      //      ItemStackUtil.shrink(player, itemstack);
       itemstack.shrink(1);
       player.swing(handIn);
       if (world.isClientSide && ConfigRegistryHearts.DO_SOUND_USE.get()) {

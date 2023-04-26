@@ -2,6 +2,8 @@ package com.lothrazar.heartbalance;
 
 import java.util.UUID;
 import com.lothrazar.heartbalance.item.ItemHeart;
+import com.lothrazar.library.events.EventFlib;
+import com.lothrazar.library.util.LevelWorldUtil;
 import com.lothrazar.library.util.SoundUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +23,7 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class HeartEvents {
+public class HeartEvents extends EventFlib {
 
   public static final UUID ID = UUID.fromString("55550aa2-eff2-4a81-b92b-a1cb95f15555");
 
@@ -43,8 +45,8 @@ public class HeartEvents {
 
   @SubscribeEvent
   public void onEntityJoinWorld(EntityJoinLevelEvent event) {
-    if (event.getEntity() instanceof Player) {
-      forceHearts((Player) event.getEntity());
+    if (event.getEntity() instanceof Player player) {
+      forceHearts(player);
     }
   }
 
@@ -100,8 +102,7 @@ public class HeartEvents {
       if (event.getEntity().getType().getCategory() == MobCategory.MONSTER) {
         //drop
         BlockPos pos = event.getEntity().blockPosition();
-        world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D,
-            new ItemStack(ModRegistry.HALF_HEART.get())));
+        LevelWorldUtil.dropItemStackRandomMotion(world, pos, new ItemStack(ModRegistry.HALF_HEART.get()), 0.03F);
       }
     }
   }
