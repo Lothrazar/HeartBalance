@@ -89,7 +89,7 @@ public class HeartEvents extends EventFlib {
 
   @SubscribeEvent
   public void onLivingDeathEvent(LivingDeathEvent event) {
-    Level world = event.getEntity().level;
+    Level world = event.getEntity().level();
     if (world.isClientSide || event.getSource() == null
         || world.random.nextDouble() >= ConfigRegistryHearts.CHANCE.get()) {
       return;
