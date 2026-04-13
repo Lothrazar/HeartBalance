@@ -1,11 +1,11 @@
 package com.lothrazar.heartbalance;
 
-import java.util.UUID;
 import com.lothrazar.heartbalance.item.ItemHeart;
 import com.lothrazar.library.events.EventFlib;
 import com.lothrazar.library.util.LevelWorldUtil;
 import com.lothrazar.library.util.SoundUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
@@ -16,30 +16,30 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 public class HeartEvents extends EventFlib {
 
-  public static final UUID ID = UUID.fromString("55550aa2-eff2-4a81-b92b-a1cb95f15555");
+  public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(ModMain.MODID, "init_hearts");
 
   private static void forceHearts(Player player) {
     AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
     if (healthAttribute == null) {
       return;
     }
-    AttributeModifier oldHealthModifier = healthAttribute.getModifier(ID);
-    if (oldHealthModifier != null) {
+    if (healthAttribute.getModifier(ID) != null) {
       //delete and replace
-      healthAttribute.removeModifier(oldHealthModifier);
+      healthAttribute.removeModifier(ID);
     }
     //always apply to player if they do not have
     int h = 2 * ConfigRegistryHearts.INIT_HEARTS.get();
-    AttributeModifier healthModifier = new AttributeModifier(ID, ModMain.MODID, h, AttributeModifier.Operation.ADDITION);
+    AttributeModifier healthModifier = new AttributeModifier(ID, h, AttributeModifier.Operation.ADD_VALUE);
     healthAttribute.addPermanentModifier(healthModifier);
   }
 
@@ -56,10 +56,10 @@ public class HeartEvents extends EventFlib {
   }
 
   @SubscribeEvent
-  public void onPlayerPickup(EntityItemPickupEvent event) {
-    if (event.getEntity() instanceof Player) {
-      Player player = event.getEntity();
-      ItemEntity itemEntity = event.getItem();
+  public void onPlayerPickup(ItemEntityPickupEvent.Pre event) {
+//    if (event.getEntity() instanceof Player) {
+      Player player = event.getPlayer();
+      ItemEntity itemEntity = event.getItemEntity();
       ItemStack resultStack = itemEntity.getItem();
       if (!resultStack.isEmpty() && resultStack.getItem() instanceof ItemHeart) {
         ItemHeart heart = (ItemHeart) resultStack.getItem();
@@ -80,11 +80,11 @@ public class HeartEvents extends EventFlib {
         if (!ConfigRegistryHearts.DO_PICKUP.get() ||
             itemEntity.getItem().isEmpty()) {
           itemEntity.remove(Entity.RemovalReason.DISCARDED);
-          //cancel to block the pickup
-          event.setCanceled(true);
+          //deny to block the pickup
+          event.setCanPickup(TriState.FALSE);// NOT cancellable anymore, this is the new solution
         }
       }
-    }
+//    }
   }
 
   @SubscribeEvent
