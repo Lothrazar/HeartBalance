@@ -15,6 +15,6 @@
     }
   ],
   "result": {
-    "item": "heartbalance:refill_heart"
+    "id": "heartbalance:refill_heart"
   }
 }

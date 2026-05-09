@@ -1,21 +1,18 @@
 package com.lothrazar.heartbalance;
 
-import com.lothrazar.library.config.ConfigTemplate;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.*;
 
-public class ConfigRegistryHearts extends ConfigTemplate {
+public class ConfigRegistryHearts {
 
-  private static ForgeConfigSpec CONFIG;
-  public static IntValue INIT_HEARTS;
+  static ModConfigSpec CONFIG;
+  public static ModConfigSpec.IntValue INIT_HEARTS;
   public static DoubleValue CHANCE;
   public static BooleanValue DO_SOUND_USE;
   public static BooleanValue DO_SOUND_PICKUP;
   public static BooleanValue DO_PICKUP;
   static {
-    final ForgeConfigSpec.Builder BUILDER = builder();
+    final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     BUILDER.comment("General settings").push(ModMain.MODID);
     DO_SOUND_USE = BUILDER.comment("\r\nPlay sounds on heart pickup").define("soundOnUse", true);
     DO_SOUND_PICKUP = BUILDER.comment("\r\nPlay sounds on heart pickup").define("soundOnPickup", true);
@@ -29,7 +26,7 @@ public class ConfigRegistryHearts extends ConfigTemplate {
     CONFIG = BUILDER.build();
   }
 
-  public ConfigRegistryHearts() {
-    CONFIG.setConfig(setup(ModMain.MODID));
-  }
+//  public ConfigRegistryHearts() {
+//    CONFIG.setConfig(setup(ModMain.MODID));
+//  }
 }
