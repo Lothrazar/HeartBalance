@@ -4,7 +4,7 @@ import com.lothrazar.heartbalance.ConfigRegistryHearts;
 import com.lothrazar.heartbalance.ModRegistry;
 import com.lothrazar.library.item.ItemFlib;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,19 +24,19 @@ public class ItemHeart extends ItemFlib {
   }
 
   @Override
-  public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand handIn) {
+  public InteractionResult use(Level world, Player player, InteractionHand handIn) {
     ItemStack itemstack = player.getItemInHand(handIn);
-    if (player.isHurt() && !player.getCooldowns().isOnCooldown(itemstack.getItem())) {
+    if (player.isHurt() && !player.getCooldowns().isOnCooldown(itemstack)) {
       player.heal(getHealing());
-      player.getCooldowns().addCooldown(itemstack.getItem(), COOLDOWN);
+      player.getCooldowns().addCooldown(itemstack, COOLDOWN);
       //      ItemStackUtil.shrink(player, itemstack);
       itemstack.shrink(1);
       player.swing(handIn);
-      if (world.isClientSide && ConfigRegistryHearts.DO_SOUND_USE.get()) {
+      if (world.isClientSide() && ConfigRegistryHearts.DO_SOUND_USE.get()) {
         player.playSound(ModRegistry.HEART_SOUND.get(), 0.2F, 0.95F);
       }
-      return InteractionResultHolder.success(itemstack);
+      return InteractionResult.SUCCESS;
     }
-    return InteractionResultHolder.pass(player.getItemInHand(handIn));
+    return InteractionResult.PASS;
   }
 }

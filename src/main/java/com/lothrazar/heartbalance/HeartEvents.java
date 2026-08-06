@@ -5,7 +5,7 @@ import com.lothrazar.library.events.EventFlib;
 import com.lothrazar.library.util.LevelWorldUtil;
 import com.lothrazar.library.util.SoundUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -26,7 +26,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 public class HeartEvents extends EventFlib {
 
-  public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(ModMain.MODID, "init_hearts");
+  public static final Identifier ID = Identifier.fromNamespaceAndPath(ModMain.MODID, "init_hearts");
 
   private static void forceHearts(Player player) {
     AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
@@ -90,8 +90,8 @@ public class HeartEvents extends EventFlib {
   @SubscribeEvent
   public void onLivingDeathEvent(LivingDeathEvent event) {
     Level world = event.getEntity().level();
-    if (world.isClientSide || event.getSource() == null
-        || world.random.nextDouble() >= ConfigRegistryHearts.CHANCE.get()) {
+    if (world.isClientSide() || event.getSource() == null
+        || world.getRandom().nextDouble() >= ConfigRegistryHearts.CHANCE.get()) {
       return;
     }
     //if config is at 10, and you roll in 10-100 you were cancelled,
