@@ -19,7 +19,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 @EventBusSubscriber(modid=ModMain.MODID)
 public class ModRegistry {
 
-  public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, ModMain.MODID);
+  public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ModMain.MODID);
   public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, ModMain.MODID);
   private static final ResourceKey<CreativeModeTab> TAB = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(ModMain.MODID, "tab"));
 
@@ -36,8 +36,8 @@ public class ModRegistry {
     });
   }
 
-  public static final DeferredHolder<Item,ItemHeart> REFILL_HEART = ITEMS.register("refill_heart", () -> new ItemHeart(new Item.Properties(), 20));
-  public static final DeferredHolder<Item,ItemHeart> HALF_HEART = ITEMS.register("half_heart", () -> new ItemHeart(new Item.Properties(), 1));
-  public static final DeferredHolder<Item,ItemHeart> FULL_HEART = ITEMS.register("full_heart", () -> new ItemHeart(new Item.Properties(), 2));
+  public static final DeferredHolder<Item,ItemHeart> REFILL_HEART = ITEMS.registerItem("refill_heart", props -> new ItemHeart(props, 20));
+  public static final DeferredHolder<Item,ItemHeart> HALF_HEART = ITEMS.registerItem("half_heart", props -> new ItemHeart(props, 1));
+  public static final DeferredHolder<Item,ItemHeart> FULL_HEART = ITEMS.registerItem("full_heart", props -> new ItemHeart(props, 2));
   public static final DeferredHolder<SoundEvent,SoundEvent> HEART_SOUND = SOUNDS.register("heart_get", () -> SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(ModMain.MODID, "heart_get")));
 }

@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "heartbalance:half_heart"
-    },
-    {
-      "item": "heartbalance:half_heart"
-    }
+    "heartbalance:half_heart",
+    "heartbalance:half_heart"
   ],
   "result": {
     "id": "heartbalance:full_heart"
